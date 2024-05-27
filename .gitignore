@@ -154,3 +154,4 @@ cython_debug/
 
 # secret text
 .txt
+*.txt
