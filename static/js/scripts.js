@@ -1,28 +1,39 @@
-$(document).ready(function() {
-    $('#chat-form').on('submit', function(event) {
-        event.preventDefault();
+document.addEventListener('DOMContentLoaded', function () {
+    const messageInput = document.getElementById('messageInput');
+    const sendMessage = document.getElementById('sendMessage');
+    const chatboxBody = document.getElementById('chatbox-body');
 
-        let userMessage = $('#user-input').val();
-        if (userMessage.trim() === '') {
-            return;
+    sendMessage.addEventListener('click', function () {
+        const userMessage = messageInput.value.trim();
+        if (userMessage) {
+            addMessage(userMessage, 'user');
+            messageInput.value = '';
+
+            fetch('/get_response', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: userMessage }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                addMessage(data.response, 'assistant');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
-
-        $('#chat-box').append('<div class="user-message mb-2"><strong>You:</strong> ' + userMessage + '</div>');
-        $('#user-input').val('');
-
-        $.ajax({
-            type: 'POST',
-            url: '/get_response',
-            contentType: 'application/json',
-            data: JSON.stringify({ message: userMessage }),
-            success: function(response) {
-                $('#chat-box').append('<div class="bot-response mb-2"><strong>Bot:</strong> ' + response.response + '</div>');
-                $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
-            },
-            error: function() {
-                $('#chat-box').append('<div class="bot-response mb-2"><strong>Bot:</strong> Sorry, something went wrong!</div>');
-                $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
-            }
-        });
     });
+
+    function addMessage(text, sender) {
+        const message = document.createElement('div');
+        message.classList.add('message', sender);
+        const messageBubble = document.createElement('div');
+        messageBubble.classList.add('message-bubble');
+        messageBubble.innerHTML = text;
+        message.appendChild(messageBubble);
+        chatboxBody.appendChild(message);
+        chatboxBody.scrollTop = chatboxBody.scrollHeight;
+    }
 });
