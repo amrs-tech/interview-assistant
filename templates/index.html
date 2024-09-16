@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="chatbox">
+            <div class="chatbox-header">
+                <h2>Interview Assistant</h2>
+            </div>
+            <div class="chatbox-body" id="chatbox-body">
+                <!-- Messages will be dynamically inserted here -->
+            </div>
+            <div class="chatbox-footer">
+                <input type="text" id="messageInput" placeholder="Type your message...">
+                <button id="sendMessage">Send</button>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>
